@@ -5,7 +5,7 @@ flowchart TD
 
     B --> E[Wenduag: I am the wandering huntress, Wenduag. I have spent my entire life in this here wilderness, far away from civilization.]
     E --> F[Player: Why are you here?]
-    E --> G[Player (Requires Step 1 of In My Time of Need|Diane): Diane sent me, she said you needed my help?]
+    E --> G[Player *Requires Step 1 of In My Time of Need from Diane*: Diane sent me, she said you needed my help?]
     E --> H[Player: Goodbye. *Leave Wenduag.*]
 
     F --> I[Wenduag: Well, without me, this wilderness will keep growing with no limits. My job is to hunt the creatures in it, and to acquaint those brave enough to my wilderness.]
