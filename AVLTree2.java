@@ -207,7 +207,7 @@ class AVLTree {
     }
 }
 
-public class AVLTree {
+public class AVLTree2 {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         AVLTree avl = new AVLTree();
