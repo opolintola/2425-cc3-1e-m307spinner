@@ -53,17 +53,25 @@ class AVLTree {
     }
 
     void insert(int value) {
+        System.out.println("\nInsert " + value + ":");
         root = insertRec(root, value);
+        printTreeState(); // Print the tree state after insertion
     }
 
     TreeNode insertRec(TreeNode node, int value) {
-        if (node == null) return new TreeNode(value);
+        if (node == null) {
+            System.out.println("- " + value + " becomes the root node");
+            return new TreeNode(value);
+        }
 
         if (value < node.value) {
+            System.out.println("- " + value + " becomes the left child of " + node.value);
             node.left = insertRec(node.left, value);
         } else if (value > node.value) {
+            System.out.println("- " + value + " becomes the right child of " + node.value);
             node.right = insertRec(node.right, value);
         } else {
+            System.out.println("- " + value + " is a duplicate and will not be inserted");
             return node; // Duplicate values are not allowed
         }
 
@@ -73,28 +81,39 @@ class AVLTree {
     }
 
     void delete(int value) {
+        System.out.println("\nDelete " + value + ":");
         root = deleteRec(root, value);
+        printTreeState(); // Print the tree state after deletion
     }
 
     TreeNode deleteRec(TreeNode root, int value) {
-        if (root == null) return root;
+        if (root == null) {
+            System.out.println("- " + value + " not found in the tree");
+            return root;
+        }
 
         if (value < root.value) {
+            System.out.println("- Searching for " + value + " in the left subtree of " + root.value);
             root.left = deleteRec(root.left, value);
         } else if (value > root.value) {
+            System.out.println("- Searching for " + value + " in the right subtree of " + root.value);
             root.right = deleteRec(root.right, value);
         } else {
+            System.out.println("- " + value + " found and will be deleted");
             if (root.left == null || root.right == null) {
                 TreeNode temp = (root.left != null) ? root.left : root.right;
                 if (temp == null) {
+                    System.out.println("- " + value + " is a leaf node and will be removed");
                     temp = root;
                     root = null;
                 } else {
+                    System.out.println("- " + value + " has one child (" + temp.value + ") and will be replaced");
                     root = temp;
                 }
             } else {
                 // Replace with the inorder predecessor (max value in the left subtree)
                 TreeNode maxValLeft = findMax(root.left);
+                System.out.println("- " + value + " has two children. Replacing with inorder predecessor (" + maxValLeft.value + ")");
                 root.value = maxValLeft.value;
                 root.left = deleteRec(root.left, maxValLeft.value);
             }
@@ -122,10 +141,12 @@ class AVLTree {
         // Left-heavy
         if (balanceFactor > 1) {
             if (getBalance(node.left) >= 0) {
-                // Left-Left case
+                System.out.println("- Unbalance: Left-Left case at node " + node.value);
+                System.out.println("- Performing right rotation on " + node.value);
                 return rightRotate(node);
             } else {
-                // Left-Right case
+                System.out.println("- Unbalance: Left-Right case at node " + node.value);
+                System.out.println("- Performing left rotation on " + node.left.value + ", then right rotation on " + node.value);
                 node.left = leftRotate(node.left);
                 return rightRotate(node);
             }
@@ -134,15 +155,18 @@ class AVLTree {
         // Right-heavy
         if (balanceFactor < -1) {
             if (getBalance(node.right) <= 0) {
-                // Right-Right case
+                System.out.println("- Unbalance: Right-Right case at node " + node.value);
+                System.out.println("- Performing left rotation on " + node.value);
                 return leftRotate(node);
             } else {
-                // Right-Left case
+                System.out.println("- Unbalance: Right-Left case at node " + node.value);
+                System.out.println("- Performing right rotation on " + node.right.value + ", then left rotation on " + node.value);
                 node.right = rightRotate(node.right);
                 return leftRotate(node);
             }
         }
 
+        System.out.println("- Tree is balanced at node " + node.value);
         return node;
     }
 
@@ -207,6 +231,39 @@ class AVLTree {
         int h = height(root);
         return (int) Math.pow(2, h) - 1;
     }
+
+    void printTreeState() {
+        int arraySize = getArraySize();
+        int[] arrayRepresentation = new int[arraySize];
+        fillArray(root, arrayRepresentation, 0);
+
+        System.out.println("\n1-D Array Representation:");
+        System.out.println("Size of array = 2^K - 1 = 2^" + height(root) + " - 1 = " + arraySize + " nodes");
+        System.out.print("Declaration = int AVL[" + arraySize + "] = {");
+        for (int i = 0; i < arrayRepresentation.length; i++) {
+            System.out.print(arrayRepresentation[i]);
+            if (i < arrayRepresentation.length - 1) System.out.print(", ");
+        }
+        System.out.println("}\n");
+
+        System.out.println("Index Table:");
+        for (int i = 0; i < arrayRepresentation.length; i++) {
+            System.out.printf("%-8d", i);
+        }
+        System.out.println();
+        for (int i = 0; i < arrayRepresentation.length; i++) {
+            System.out.printf("%-8d", arrayRepresentation[i]);
+        }
+        System.out.println("\n");
+
+        System.out.println("Traversals:");
+        System.out.print("Preorder = ");
+        preorder();
+        System.out.print("Inorder = ");
+        inorder();
+        System.out.print("Postorder = ");
+        postorder();
+    }
 }
 
 public class AVLTree2 {
@@ -253,36 +310,6 @@ public class AVLTree2 {
                     System.out.println("Invalid value: " + value + ". Please enter valid integers.");
                 }
             }
-
-            int arraySize = avl.getArraySize();
-            int[] arrayRepresentation = new int[arraySize];
-            avl.fillArray(avl.root, arrayRepresentation, 0);
-
-            System.out.println("\n1-D Array Representation:");
-            System.out.println("Size of array = 2^K - 1 = 2^" + avl.height(avl.root) + " - 1 = " + arraySize + " nodes");
-            System.out.print("Declaration = int AVL[" + arraySize + "] = {");
-            for (int i = 0; i < arrayRepresentation.length; i++) {
-                System.out.print(arrayRepresentation[i]);
-                if (i < arrayRepresentation.length - 1) System.out.print(", ");
-            }
-            System.out.println("}\n");
-
-            for (int i = 0; i < arrayRepresentation.length; i++) {
-                System.out.printf("%-8d", i);
-            }
-            System.out.println();
-            for (int i = 0; i < arrayRepresentation.length; i++) {
-                System.out.printf("%-8d", arrayRepresentation[i]);
-            }
-            System.out.println("\n");
-
-            System.out.println("Traversals:");
-            System.out.print("Preorder = ");
-            avl.preorder();
-            System.out.print("Inorder = ");
-            avl.inorder();
-            System.out.print("Postorder = ");
-            avl.postorder();
         }
 
         scanner.close(); // Close the scanner before exiting
